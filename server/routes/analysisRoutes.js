@@ -4,8 +4,8 @@ import { analyzeUrl, deleteAnalysis, getAnalyses, getAnalysis } from "../control
 
 const analysisRouter = express.Router();
 
-analysisRouter.post('/analyze', auth, analyzeUrl);
-analysisRouter.get('/list', auth, getAnalyses);
+analysisRouter.post('/', auth, analyzeUrl);
+analysisRouter.get('/history', auth, getAnalyses);
 analysisRouter.get('/:id', auth, getAnalysis);
 analysisRouter.delete('/:id', auth, deleteAnalysis);
 

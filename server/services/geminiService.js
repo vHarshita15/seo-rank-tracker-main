@@ -2,7 +2,6 @@ import { GoogleGenerativeAI, SchemaType as Type } from "@google/generative-ai";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// Response schema for structured SEO analysis
 const seoAnalysisSchema = {
     type: Type.OBJECT,
     properties: {
@@ -110,7 +109,7 @@ Provide 5-15 issues sorted by severity (critical first). Be specific and actiona
 Extract top 10 keywords by frequency from the page content.`;
 
         const model = genAI.getGenerativeModel({
-            model: "gemini-2.0-flash",
+            model: "gemini-3.5-flash",
             generationConfig: {
                 responseMimeType: "application/json",
                 responseSchema: seoAnalysisSchema,

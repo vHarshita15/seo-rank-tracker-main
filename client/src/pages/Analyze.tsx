@@ -20,7 +20,6 @@ export default function Analyze() {
     const [error, setError] = useState("");
     const [searchParams] = useSearchParams();
     const pollRef = useRef<any>(null);
-
     const navigate = useNavigate();
 
     const handleAnalyze = async (submitUrl?: string) => {
@@ -32,7 +31,7 @@ export default function Analyze() {
         setCurrentStep(0);
 
         try {
-            const res = await api.post('/api/analysis/analyze', {
+            const res = await api.post('/api/analyze', {
                 url: targetUrl.startsWith("http") ? targetUrl : `https://${targetUrl}`,
             });
 
@@ -50,12 +49,12 @@ export default function Analyze() {
                 attempts++;
                 if (attempts > maxAttempts) {
                     if (pollRef.current) clearInterval(pollRef.current);
-                    setError("Analysis is taking longer than expected. Please try again later.");
+                    setError("Analysis is taking longer than expected. Please try again.");
                     setAnalyzing(false);
                     return;
                 }
                 try {
-                    const check = await api.get(`/api/analysis/${id}`);
+                    const check = await api.get(`/api/analyze/${id}`);
                     const analysis = check.data.analysis;
 
                     if (analysis.status === "completed") {
@@ -70,7 +69,7 @@ export default function Analyze() {
                         if (attempts > 5) setCurrentStep(2);
                     }
                 } catch {
-                    // silent poll error, keep trying
+                    // silent poll error
                 }
             }, 2000);
 
@@ -91,7 +90,6 @@ export default function Analyze() {
             setUrl(prefillUrl);
             setTimeout(() => handleAnalyze(prefillUrl), 500);
         }
-
         return () => {
             if (pollRef.current) clearInterval(pollRef.current);
         };
@@ -126,12 +124,11 @@ export default function Analyze() {
                                         onChange={(e) => setUrl(e.target.value)}
                                         placeholder="Enter website URL (e.g., example.com)"
                                         className="w-full bg-transparent text-foreground placeholder-muted-foreground outline-none text-base py-3"
-                                        id="analyze-url-input"
                                         autoFocus
                                     />
                                 </div>
-                                <button type="submit" className="bg-primary px-6 py-3 rounded-full flex items-center gap-2 text-primary-foreground text-sm hover:opacity-90 transition-opacity shrink-0" id="analyze-submit-btn" style={{ color: "var(--background)" }}>
-                                    Analyze <ArrowRightIcon className="text-background size-4 shrink-0" />
+                                <button type="submit" className="bg-primary px-6 py-3 rounded-full flex items-center gap-2 text-sm hover:opacity-90 transition-opacity shrink-0" style={{ color: "var(--background)" }}>
+                                    Analyze <ArrowRightIcon className="size-4 shrink-0" />
                                 </button>
                             </div>
                         </form>

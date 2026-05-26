@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { SearchIcon, ArrowRightIcon, BarChart3Icon, GlobeIcon, TrendingUpIcon } from "lucide-react";
-import AnalysesCard from "../components/AnalysesCard";
 import { useApp } from "../context/AppContext";
 
 interface AnalysisSummary {
@@ -27,7 +26,7 @@ export default function Dashboard() {
 
     const fetchRecent = async () => {
         try {
-            const res = await api.get("/api/analysis/list?limit=6");
+            const res = await api.get("/api/analyze/history?limit=6");
             if (res.data.success) {
                 setAnalyses(res.data.analyses);
             }
@@ -54,13 +53,12 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
-        (async () => await fetchRecent())();
+        fetchRecent();
     }, []);
 
     return (
         <div className="min-h-screen pt-16 md:pt-24 bg-background">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-                {/* Header */}
                 <div className="mb-8">
                     <h1 className="text-2xl sm:text-3xl font-medium text-foreground mb-1">
                         Welcome back, <span className="gradient-text">{user?.name}</span>
@@ -68,21 +66,19 @@ export default function Dashboard() {
                     <p className="text-muted-foreground text-sm">Analyze websites and boost your SEO performance.</p>
                 </div>
 
-                {/* Quick Analyze */}
-                <form onSubmit={handleAnalyze} className="mb-10" style={{ animationDelay: "100ms" }}>
+                <form onSubmit={handleAnalyze} className="mb-10">
                     <div className="border border-primary/20 rounded-full p-2 flex items-center gap-2 max-w-2xl">
                         <div className="flex items-center gap-3 flex-1 px-3">
                             <SearchIcon size={20} className="text-muted-foreground shrink-0" />
-                            <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Enter a URL to analyze..." className="w-full bg-transparent text-foreground placeholder-muted-foreground outline-none text-sm py-3" id="dashboard-url-input" />
+                            <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} placeholder="Enter a URL to analyze..." className="w-full bg-transparent text-foreground placeholder-muted-foreground outline-none text-sm py-3" />
                         </div>
-                        <button type="submit" className="bg-primary px-5 py-3 rounded-full text-primary-foreground text-sm hover:opacity-90 transition-opacity shrink-0 flex items-center gap-2" style={{ color: "var(--background)" }} id="dashboard-analyze-btn">
+                        <button type="submit" className="bg-primary px-5 py-3 rounded-full text-sm hover:opacity-90 transition-opacity shrink-0 flex items-center gap-2" style={{ color: "var(--background)" }}>
                             Analyze
                             <ArrowRightIcon size={16} />
                         </button>
                     </div>
                 </form>
 
-                {/* Stats */}
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
                     <div className="glass rounded-2xl p-5 flex items-center gap-4">
                         <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
@@ -113,8 +109,7 @@ export default function Dashboard() {
                     </div>
                 </div>
 
-                {/* Recent Analyses */}
-                <div style={{ animationDelay: "300ms" }}>
+                <div>
                     <div className="flex items-center justify-between mb-5">
                         <h2 className="text-lg font-semibold text-foreground">Recent Analyses</h2>
                         {analyses.length > 0 && (
@@ -137,7 +132,28 @@ export default function Dashboard() {
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {analyses.map((a) => (
-                                <AnalysesCard key={a._id} analysis={a} />
+                                <Link key={a._id} to={`/report/${a._id}`} className="glass rounded-2xl p-5 hover:bg-muted/50 transition-all">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <p className="text-sm font-medium text-foreground truncate">
+                                            {(() => { try { return new URL(a.url).hostname; } catch { return a.url; } })()}
+                                        </p>
+                                        <span className={`text-lg font-bold ${getScoreClass(a.overallScore)}`}>{a.overallScore}</span>
+                                    </div>
+                                    <p className="text-xs text-muted-foreground truncate mb-3">{a.url}</p>
+                                    <div className="grid grid-cols-4 gap-2">
+                                        {[
+                                            { label: "SEO", value: a.categories.seo },
+                                            { label: "Perf", value: a.categories.performance },
+                                            { label: "A11y", value: a.categories.accessibility },
+                                            { label: "BP", value: a.categories.bestPractices },
+                                        ].map((c) => (
+                                            <div key={c.label} className="text-center">
+                                                <p className={`text-sm font-bold ${getScoreClass(c.value)}`}>{c.value}</p>
+                                                <p className="text-[10px] text-muted-foreground">{c.label}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </Link>
                             ))}
                         </div>
                     )}

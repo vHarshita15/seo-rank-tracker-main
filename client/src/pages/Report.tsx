@@ -54,7 +54,6 @@ interface AnalysisData {
     keywords: { word: string; count: number; density: number }[];
     issues: { severity: string; category: string; message: string; recommendation: string }[];
 }
-
 export default function Report() {
     const { api } = useApp();
     const { id } = useParams();
@@ -65,7 +64,7 @@ export default function Report() {
 
     const fetchAnalysis = async () => {
         try {
-            const res = await api.get(`/api/analysis/${id}`);
+           const res = await api.get(`/api/analyze/${id}`);
             if (res.data.success) {
                 if (res.data.analysis.status === "processing") {
                     // Poll for completion
