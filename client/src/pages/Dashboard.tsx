@@ -18,7 +18,7 @@ interface AnalysisSummary {
 }
 
 export default function Dashboard() {
-    const { user, api } = useApp();
+    const { api } = useApp();
     const navigate = useNavigate();
     const [url, setUrl] = useState("");
     const [analyses, setAnalyses] = useState<AnalysisSummary[]>([]);
@@ -61,7 +61,7 @@ export default function Dashboard() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
                 <div className="mb-8">
                     <h1 className="text-2xl sm:text-3xl font-medium text-foreground mb-1">
-                        Welcome back, <span className="gradient-text">{user?.name}</span>
+                        Welcome back, <span className="gradient-text">there</span>
                     </h1>
                     <p className="text-muted-foreground text-sm">Analyze websites and boost your SEO performance.</p>
                 </div>
@@ -103,7 +103,7 @@ export default function Dashboard() {
                             <BarChart3Icon size={22} />
                         </div>
                         <div>
-                            <p className="text-2xl font-bold text-foreground">{user?.plan === "free" ? `${5 - (user?.analysisCount || 0)}` : "∞"}</p>
+                            <p className="text-2xl font-bold text-foreground">∞</p>
                             <p className="text-xs text-muted-foreground">Scans Left Today</p>
                         </div>
                     </div>
