@@ -2,6 +2,8 @@
 
 **RankPilot** is a full-stack SEO rank tracking platform that helps you monitor keyword rankings, analyze SERP data, and get AI-powered insights — all in one dashboard.
 
+🔗 **Live Demo:** [seo-rank-tracker-main.vercel.app](https://seo-rank-tracker-main.vercel.app/)
+
 ## ✨ Features
 
 - 🔍 **Keyword Rank Tracking** — Track your website's search engine rankings for target keywords
@@ -95,8 +97,9 @@ rankpilot/
 
    Create a `.env` file in the `frontend` folder:
    ```env
-   VITE_API_BASE_URL=http://localhost:5000
+   VITE_API_BASE_URL=your_backend_url_here
    ```
+   > ⚠️ Use your actual backend URL here (local or deployed) — never hardcode `localhost` in production, or API calls will fail after deployment.
 
    ```bash
    npm run dev
